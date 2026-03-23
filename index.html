@@ -595,6 +595,7 @@ let allMarkers = [];
 let circleLayer = null;
 let userMarker = null;
 let distributors = [];
+let lastFound = [];
 
 // ═══════════════════════════════════════════════════════
 //  LOAD DATA
@@ -730,6 +731,7 @@ async function doSearch() {
   map.fitBounds(bounds, { padding: [30, 30] });
 
   // Render results panel
+  lastFound = found;
   renderResults(found, radiusKm);
 
   spinner.classList.remove('active');
@@ -760,7 +762,7 @@ function renderResults(found, radiusKm) {
   }
 
   panel.innerHTML = found.map((d, i) => `
-    <div class="result-card" id="rc-${i}" onclick="focusMarker(${d.lat}, ${d.lng}, ${i})">
+    <div class="result-card" id="rc-${i}" data-idx="${i}">
       <div class="rc-name">${d.name}</div>
       <div class="rc-addr">${d.address}<br/>${d.postal} ${d.city}</div>
       <span class="rc-dist">
@@ -772,17 +774,24 @@ function renderResults(found, radiusKm) {
   `).join('');
 }
 
-function focusMarker(lat, lng, idx) {
-  map.setView([lat, lng], 14, { animate: true });
-  // open popup
-  const marker = allMarkers.find(m => m._distData.lat === lat && m._distData.lng === lng);
+// Event delegation — one listener on the panel, works for all cards
+document.getElementById('results-panel').addEventListener('click', function(e) {
+  const card = e.target.closest('.result-card');
+  if (!card) return;
+  // don't intercept phone link clicks
+  if (e.target.tagName === 'A') return;
+  const idx = parseInt(card.dataset.idx);
+  const d = lastFound[idx];
+  if (!d) return;
+
+  map.setView([d.lat, d.lng], 14, { animate: true });
+  const marker = allMarkers.find(m => m._distData.lat === d.lat && m._distData.lng === d.lng);
   if (marker) marker.openPopup();
 
-  // highlight card
   document.querySelectorAll('.result-card').forEach(c => c.classList.remove('active'));
-  const card = document.getElementById(`rc-${idx}`);
-  if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-}
+  card.classList.add('active');
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
 
 // ── Enter key support ──
 document.getElementById('postal-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
