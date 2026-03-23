@@ -1,0 +1,49 @@
+<!-- ═══════════════════════════════════════════
+  PART 1 — Paste this in your TEXT EDITOR block
+  (This is just structure, no scripts or styles)
+════════════════════════════════════════════ -->
+
+<!-- HERO -->
+<div class="vd-hero">
+  <div class="vd-pill">Verdelers netwerk</div>
+  <h1 class="vd-title">Vind een verdeler<br/><span>bij u in de buurt</span></h1>
+  <p class="vd-sub">Voer uw postcode in en ontdek alle officiële verdelers binnen uw gewenste straal.</p>
+</div>
+
+<!-- MAIN -->
+<div class="vd-wrapper">
+
+  <!-- Search card -->
+  <div class="vd-search-card">
+    <h2 class="vd-card-title">Zoek op postcode</h2>
+    <div class="vd-search-row">
+      <div class="vd-field">
+        <label class="vd-label">Postcode</label>
+        <input type="text" id="vd-postal-input" placeholder="bv. 9000" maxlength="4" inputmode="numeric"/>
+      </div>
+      <div class="vd-field" style="max-width:180px">
+        <label class="vd-label">Zoekstraal</label>
+        <select id="vd-radius-select">
+          <option value="25">25 km</option>
+          <option value="50" selected>50 km</option>
+        </select>
+      </div>
+      <button class="vd-btn-search" id="vd-search-btn">Zoeken →</button>
+    </div>
+    <div id="vd-status-bar">
+      <span class="vd-spinner" id="vd-spinner"></span>
+      <span id="vd-status-text">Voer een postcode in om te beginnen.</span>
+    </div>
+  </div>
+
+  <!-- Map + results -->
+  <div class="vd-grid">
+    <div class="vd-map-wrap"><div id="vd-map"></div></div>
+    <div id="vd-results-panel">
+      <div class="vd-no-results">
+        <p>Geen verdelers weergegeven.<br/>Voer een postcode in om te zoeken.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
